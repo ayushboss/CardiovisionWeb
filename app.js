@@ -22,22 +22,28 @@ app.get('/custom', (req,res)=> {
 
 app.post('/generate_graph', (req,res) => {
 	console.log("checkpoint 0");
-	var heartrate = req.body.heartrate;
-	var time = req.body.time;
-	var leftVentrPressure = req.body.leftVentrPressure;
-	var leftAtrPressure = req.body.leftAtrPressure;
-	var aorticPressure = req.body.aorticPressure;
-	var arterialPressure = req.body.atrialPressure;
-	var systemicVascularResistance = req.body.systemicVascularResistance;
-	var mitralValveResistance = req.body.mitralValveResistance;
+	var heartrate = parseInt(req.body.heartrate);
+	var time = parseInt(req.body.time);
+	var leftVentrPressure = parseInt(req.body.leftVentrPressure);
+	var leftAtrPressure = parseInt(req.body.leftAtrPressure);
+	var aorticPressure = parseInt(req.body.aorticPressure);
+	var arterialPressure = parseInt(req.body.atrialPressure);
+	var systemicVascularResistance = parseInt(req.body.systemicVascularResistance);
+	var mitralValveResistance = parseInt(req.body.mitralValveResistance);
 
 	// plot the curves with matplotlibnode 
 
-	var LVP = [leftVentrPressure]; 
-	var LAP = [leftAtrPressure]; 
-	var AP = [arterialPressure]; 
-	var AOP = [aorticPressure]; 
-	var Qa = [0]; 
+	var LVP = new Array(10002);
+	var LAP =  new Array(10002);
+	var AP = new Array(10002);
+	var AOP =  new Array(10002);
+	var Qa =  new Array(10002);
+
+	LVP[0] = leftVentrPressure;
+	LAP[0] = leftAtrPressure;
+	AP[0] = arterialPressure;
+	AOP[0] = aorticPressure;
+	Qa[0] = 0;
 
 	var Cv = [];
 	var t = 0;
@@ -72,25 +78,6 @@ app.post('/generate_graph', (req,res) => {
 	var LVV = new Array(10002); //left ventricular volume over time
 	var Time = new Array(10002); //counting the discrete time steps; for graphing purposes
 
-	var A = [
-				[0,0,0,0,0],
-		        [0,-1/(Rs*Cr),1/(Rs*Cr),0,0],
-		        [0,1/(Rs*Cs),-1/(Rs*Cs),0,1/Cs],
-		        [0,0,0,0,-1/Ca],
-		        [0,0,-1/Ls,1/Ls,-Rc/Ls]
-		];
-
-	var B = [
-				[0,0],
-				[-1/Cr,0],
-				[0,0],
-				[0,1/Ca],
-				[0,0]
-		];
-	var C = new Array(2);
-	C[0] = new Array(1);
-	C[1] = new Array(1);
-
 	console.log("checkpoint 1");
 
 
@@ -104,6 +91,12 @@ app.post('/generate_graph', (req,res) => {
 		E[i] = (Emax-Emin)*En + Emin;
 		LVV[i] = LVP[i]/E[i] + V0;
 		Cv[i] = 1/E[i];
+
+		console.log("E: " + E[i])
+		console.log("LVV: " + LVV[i])
+		console.log("Cv: " + Cv[i])
+
+		console.log("LVV Full: " + LVV);
 		
 		if(LAP[i] > LVP[i]) //determine if mitral valve opens
 			Dm = 1;
@@ -118,34 +111,38 @@ app.post('/generate_graph', (req,res) => {
 		else
 			dCv = 0;
 		
-		A[0][0] = -dCv/Cv[i];
-		B[0][0] = 1/Cv[i];
-		B[0][1] = -1/Cv[i];
-		C[0][0] = (Dm/Rm)*(LAP[i] - LVP[i]);
-		C[1][0] = (Da/Ra)*(LVP[i] - AOP[i]);
+		A = [[-dCv/Cv[i],0,0,0,0],
+	        [0,-1/(Rs*Cr),1/(Rs*Cr),0,0],
+	        [0,1/(Rs*Cs),-1/(Rs*Cs),0,1/Cs],
+	        [0,0,0,0,-1/Ca],
+	        [0,0,-1/Ls,1/Ls,-Rc/Ls]];
+
+	    B = [[1/Cv[i],-1/Cv[i]],
+	        [-1/Cr,0],
+	        [0,0],
+	        [0,1/Ca],
+	        [0,0]];
+
+	    C = [[(LAP[i] - LVP[i])*Dm/Rm],
+	        [(LVP[i] - AOP[i])*Da/Ra]];
 
 
 		var aMatrix = math.matrix(A);
 		var X = [[LVP[i]], [LAP[i]], [AP[i]], [AOP[i]], [Qa[i]]];
 
-		console.log("checkpoint 2");
+		console.log("A: " + math.matrix(A));
+		console.log(math.multiply(math.matrix(A), math.matrix(X)))
 
-		multiplyBAndC = math.multiply(math.matrix(B), math.matrix(C));
-		
-		console.log(A);
+		// here is the main error, A*X does not multiply out to get a correct value.
+
+		console.log("A*X: " + math.multiply(math.matrix(A), math.matrix(X)));
+
+		dx = math.multiply(math.matrix(A), math.matrix(X)) + math.multiply(math.matrix(B), math.matrix(C));
+
 		console.log(X);
-		console.log(multiplyBAndC);
 
-		BCPlusX = math.add(math.multiply(A,X), multiplyBAndC);
-
-		console.log("checkpoint 4");
-
-		dx = BCPlusX;
-		console.log("ree");
-
-		console.log(dx[0]);
-
-		console.log(dt);
+		console.log("dx: " + dx)
+		console.log(typeof(dx[0]));
 
 		dx = math.multiply(dt, dx);
 
