@@ -37,7 +37,7 @@ app.post('/generate_graph', (req,res) => {
 	var LAP = [leftAtrPressure]; 
 	var AP = [arterialPressure]; 
 	var AOP = [aorticPressure]; 
-	var Qa = []; 
+	var Qa = [0]; 
 
 	var Cv = [];
 	var t = 0;
@@ -95,6 +95,7 @@ app.post('/generate_graph', (req,res) => {
 
 
 	while(t<=tc) {
+		dt=10;
 		tn = (t-Math.floor(t))/Tmax;
 		
 		//normalized elastance from double hill equation
@@ -125,7 +126,7 @@ app.post('/generate_graph', (req,res) => {
 
 
 		var aMatrix = math.matrix(A);
-		var X = [LVP[i], LAP[i], AP[i], AOP[i], Qa[i]];
+		var X = [[LVP[i]], [LAP[i]], [AP[i]], [AOP[i]], [Qa[i]]];
 
 		console.log("checkpoint 2");
 
@@ -140,12 +141,14 @@ app.post('/generate_graph', (req,res) => {
 		console.log("checkpoint 4");
 
 		dx = BCPlusX;
+		console.log("ree");
 
-		console.log(dx);
+		console.log(dx[0]);
 
 		console.log(dt);
 
 		dx = math.multiply(dt, dx);
+
 
 		LVP[i+1] = LVP[i] + dx[0][0];
 		LAP[i+1] = LAP[i] + dx[1][0];
