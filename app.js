@@ -20,6 +20,22 @@ app.get('/custom', (req,res)=> {
 	res.sendFile(__dirname+"/public/custom.html");
 })
 
+function dumbMultiply(a, b) {
+  var aNumRows = a.length, aNumCols = a[0].length,
+      bNumRows = b.length, bNumCols = b[0].length,
+      m = new Array(aNumRows);  // initialize array of rows
+  for (var r = 0; r < aNumRows; ++r) {
+    m[r] = new Array(bNumCols); // initialize the current row
+    for (var c = 0; c < bNumCols; ++c) {
+      m[r][c] = 0;             // initialize the current cell
+      for (var i = 0; i < aNumCols; ++i) {
+        m[r][c] += a[r][i] * b[i][c];
+      }
+    }
+  }
+  return m;
+}
+
 app.post('/generate_graph', (req,res) => {
 	console.log("checkpoint 0");
 	var heartrate = parseInt(req.body.heartrate);
@@ -129,29 +145,25 @@ app.post('/generate_graph', (req,res) => {
 
 		var aMatrix = math.matrix(A);
 		var X = [[LVP[i]], [LAP[i]], [AP[i]], [AOP[i]], [Qa[i]]];
+		var xMatrix = math.matrix(X);
 
-		console.log("A: " + math.matrix(A));
-		console.log(math.multiply(math.matrix(A), math.matrix(X)))
+		console.log("A: " + math.size(math.matrix(A)));
+		console.log("X: " + math.size(math.matrix(X)));
 
 		// here is the main error, A*X does not multiply out to get a correct value.
 
-		console.log("A*X: " + math.multiply(math.matrix(A), math.matrix(X)));
+		console.log("A*X: " + dumbMultiply(B,C));
 
-		dx = math.multiply(math.matrix(A), math.matrix(X)) + math.multiply(math.matrix(B), math.matrix(C));
-
-		console.log(X);
-
-		console.log("dx: " + dx)
-		console.log(typeof(dx[0]));
-
+		dx = math.add(math.multiply(aMatrix, xMatrix),math.multiply(math.matrix(B), math.matrix(C)));
 		dx = math.multiply(dt, dx);
 
 
-		LVP[i+1] = LVP[i] + dx[0][0];
-		LAP[i+1] = LAP[i] + dx[1][0];
-		AP[i+1] = AP[i] + dx[2][0];
-		AOP[i+1] = AOP[i] + dx[3][0];
-		Qa[i+1] = Qa[i] + dx[4][0];
+
+		LVP[i+1] = LVP[i] + math.subset(dx, math.index(0, 0));
+		LAP[i+1] = LAP[i] + math.subset(dx, math.index(1, 0));
+		AP[i+1] = AP[i] + math.subset(dx, math.index(2, 0));
+		AOP[i+1] = AOP[i] + math.subset(dx, math.index(3, 0));
+		Qa[i+1] = Qa[i] + math.subset(dx, math.index(4, 0));
 		
 		t += dt;
 		Time[i+1] = t;
@@ -165,7 +177,7 @@ app.post('/generate_graph', (req,res) => {
 	E[i] = (Emax-Emin)*En + Emin;
 	LVV[i] = LVP[i]/E[i] + V0;
 
-	console.log(mitralValveResistance)
+	console.log("YEE BIOS: " + mitralValveResistance)
 
 	res.redirect("/custom")
 })
