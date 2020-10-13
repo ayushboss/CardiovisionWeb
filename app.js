@@ -180,5 +180,46 @@ app.post('/generate_graph', (req,res) => {
 	console.log("YEE BIOS: " + mitralValveResistance)
 
 	res.redirect("/custom")
+
+	//below is the code for building a graph
+	//the plot function needs to be altered to match the requirements for this project
+	//then i need to shift this function into a file where it will actually operate, since node is server side and we need to be document based for this
+		//need to get node js to call anotehr javascirpt file to populate the canvas element
+	//stephanie -- if you have time try working on the second comment. It would be helpful if you could play around with the function and make multiple functions so that we get the correct graphs.
+
+	var canvas = $('#myCanvas')[0], 
+    ctx = canvas.getContext('2d'), 
+    width = canvas.width, 
+    height = canvas.height, 
+    plot = function plot(fn, range) { 
+        var widthScale = (width / (range[1] - range[0])), 
+            heightScale = (height / (range[3] - range[2])), 
+            first = true; 
+         
+        ctx.beginPath(); 
+         
+        for (var x = 0; x < width; x++) { 
+            var xFnVal = (x / widthScale) - range[0], 
+                yGVal = (fn(xFnVal) - range[2]) * heightScale; 
+             
+            yGVal = height - yGVal; // 0,0 is top-left 
+             
+            if (first) { 
+                ctx.moveTo(x, yGVal); 
+                first = false; 
+            } 
+            else { 
+                ctx.lineTo(x, yGVal); 
+            } 
+        } 
+         
+        ctx.strokeStyle = "red"; 
+        ctx.lineWidth = 3; 
+        ctx.stroke();  
+    }; 
+ 	
+ 	plot(function (x) { 
+    	return Math.sin(x) + Math.sin(x * 2); 
+	}, [0, Math.PI * 4, -4, 4]); 
 })
 
