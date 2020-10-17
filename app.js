@@ -2,7 +2,9 @@ var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
 var plotlib = require("nodeplotlib");
-var math = require("mathjs")
+var math = require("mathjs");
+var open = require("open");
+var plotly = require('plotly')("ayushboss", "dnQPvFSjFVfOcQgZSm2u")
 
 app.use(express.static("/public"));
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -20,33 +22,64 @@ app.get('/custom', (req,res)=> {
 	res.sendFile(__dirname+"/public/custom.html");
 })
 
-function dumbMultiply(a, b) {
-  var aNumRows = a.length, aNumCols = a[0].length,
-      bNumRows = b.length, bNumCols = b[0].length,
-      m = new Array(aNumRows);  // initialize array of rows
-  for (var r = 0; r < aNumRows; ++r) {
-    m[r] = new Array(bNumCols); // initialize the current row
-    for (var c = 0; c < bNumCols; ++c) {
-      m[r][c] = 0;             // initialize the current cell
-      for (var i = 0; i < aNumCols; ++i) {
-        m[r][c] += a[r][i] * b[i][c];
-      }
-    }
-  }
-  return m;
-}
+app.get('/waiting', (req,res)=> {
+	console.log("waiting for the graphs to be built");
+	res.sendFile(__dirname+"/public/waiting.html")
+})
+
+app.get('/home', (req,res) => {
+	res.redirect("/");
+});
+
+app.get('/example_preset', (req,res)=> {
+	console.log("custom link");
+	res.sendFile(__dirname+"/public/example_preset.html");
+})
+
+app.get('/adult_female', (req,res)=> {
+	console.log("custom link");
+	res.sendFile(__dirname+"/public/adult_female.html");
+})
+
+app.get('/adult_male', (req,res)=> {
+	console.log("custom link");
+	res.sendFile(__dirname+"/public/adult_male.html");
+})
+
+app.get('/child', (req,res)=> {
+	console.log("custom link");
+	res.sendFile(__dirname+"/public/child.html");
+})
+
+app.get('/hypertension', (req,res)=> {
+	console.log("custom link");
+	res.sendFile(__dirname+"/public/hypertension.html");
+})
+
+app.get('/hypotension', (req,res)=> {
+	console.log("custom link");
+	res.sendFile(__dirname+"/public/hypotension.html");
+})
+
+app.get('/mitral_stenosis', (req,res)=> {
+	console.log("custom link");
+	res.sendFile(__dirname+"/public/mitral_stenosis.html");
+})
+
+app.get('/aortic_stenosis', (req,res)=> {
+	console.log("custom link");
+	res.sendFile(__dirname+"/public/aortic_stenosis.html");
+})
 
 app.post('/generate_graph', (req,res) => {
-	console.log("checkpoint 0");
-	var heartrate = parseInt(req.body.heartrate);
-	var time = parseInt(req.body.time);
-	var leftVentrPressure = parseInt(req.body.leftVentrPressure);
-	var leftAtrPressure = parseInt(req.body.leftAtrPressure);
-	var aorticPressure = parseInt(req.body.aorticPressure);
-	var arterialPressure = parseInt(req.body.atrialPressure);
-	var systemicVascularResistance = parseInt(req.body.systemicVascularResistance);
-	var mitralValveResistance = parseInt(req.body.mitralValveResistance);
 
+	var heartrate = Number(req.body.heartrate);
+	var leftVentrPressure = Number(req.body.leftVentrPressure);
+	var leftAtrPressure = Number(req.body.leftAtrPressure);
+	var aorticPressure = Number(req.body.aorticPressure);
+	var arterialPressure = Number(req.body.atrialPressure);
+	var systemicVascularResistance = Number(req.body.systemicVascularResistance);
+	var mitralValveResistance = Number(req.body.mitralValveResistance);
 	// plot the curves with matplotlibnode 
 
 	var LVP = new Array(10002);
@@ -70,9 +103,11 @@ app.post('/generate_graph', (req,res) => {
 	var HR = heartrate;
 	var tc = 60/HR;
 	var Tmax = 0.2 + 0.15*tc;
-	var Rs = 1;
-	var Rm = 0.0050;
-	var Ra = 0.0010;
+	var Rs = systemicVascularResistance;
+	var Ra = Number(req.body.aorticResistance);
+	console.log("Ra: " + Ra);
+	console.log(mitralValveResistance)
+	var Rm = mitralValveResistance;
 	var Rc = 0.0398;
 	var Cr = 4.4000;
 	var Cs = 1.3300;
@@ -93,12 +128,12 @@ app.post('/generate_graph', (req,res) => {
 	var E = new Array(10002); //array for elastance over time
 	var LVV = new Array(10002); //left ventricular volume over time
 	var Time = new Array(10002); //counting the discrete time steps; for graphing purposes
+	var dt = 0.0001;
 
 	console.log("checkpoint 1");
 
 
 	while(t<=tc) {
-		dt=10;
 		tn = (t-Math.floor(t))/Tmax;
 		
 		//normalized elastance from double hill equation
@@ -108,11 +143,11 @@ app.post('/generate_graph', (req,res) => {
 		LVV[i] = LVP[i]/E[i] + V0;
 		Cv[i] = 1/E[i];
 
-		console.log("E: " + E[i])
-		console.log("LVV: " + LVV[i])
-		console.log("Cv: " + Cv[i])
+		// console.log("E: " + E[i])
+		// console.log("LVV: " + LVV[i])
+		// console.log("Cv: " + Cv[i])
 
-		console.log("LVV Full: " + LVV);
+		// console.log("LVV Full: " + LVV);
 		
 		if(LAP[i] > LVP[i]) //determine if mitral valve opens
 			Dm = 1;
@@ -142,22 +177,12 @@ app.post('/generate_graph', (req,res) => {
 	    C = [[(LAP[i] - LVP[i])*Dm/Rm],
 	        [(LVP[i] - AOP[i])*Da/Ra]];
 
-
 		var aMatrix = math.matrix(A);
 		var X = [[LVP[i]], [LAP[i]], [AP[i]], [AOP[i]], [Qa[i]]];
 		var xMatrix = math.matrix(X);
 
-		console.log("A: " + math.size(math.matrix(A)));
-		console.log("X: " + math.size(math.matrix(X)));
-
-		// here is the main error, A*X does not multiply out to get a correct value.
-
-		console.log("A*X: " + dumbMultiply(B,C));
-
 		dx = math.add(math.multiply(aMatrix, xMatrix),math.multiply(math.matrix(B), math.matrix(C)));
 		dx = math.multiply(dt, dx);
-
-
 
 		LVP[i+1] = LVP[i] + math.subset(dx, math.index(0, 0));
 		LAP[i+1] = LAP[i] + math.subset(dx, math.index(1, 0));
@@ -177,49 +202,137 @@ app.post('/generate_graph', (req,res) => {
 	E[i] = (Emax-Emin)*En + Emin;
 	LVV[i] = LVP[i]/E[i] + V0;
 
-	console.log("YEE BIOS: " + mitralValveResistance)
+	res.redirect('/waiting');
 
-	res.redirect("/custom")
+	var dataLVPvsLVV = [{x:LVV, y:LVP, type: 'line'}];
 
-	//below is the code for building a graph
-	//the plot function needs to be altered to match the requirements for this project
-	//then i need to shift this function into a file where it will actually operate, since node is server side and we need to be document based for this
-		//need to get node js to call anotehr javascirpt file to populate the canvas element
-	//stephanie -- if you have time try working on the second comment. It would be helpful if you could play around with the function and make multiple functions so that we get the correct graphs.
+	var urlLVPLVV;
 
-	var canvas = $('#myCanvas')[0], 
-    ctx = canvas.getContext('2d'), 
-    width = canvas.width, 
-    height = canvas.height, 
-    plot = function plot(fn, range) { 
-        var widthScale = (width / (range[1] - range[0])), 
-            heightScale = (height / (range[3] - range[2])), 
-            first = true; 
-         
-        ctx.beginPath(); 
-         
-        for (var x = 0; x < width; x++) { 
-            var xFnVal = (x / widthScale) - range[0], 
-                yGVal = (fn(xFnVal) - range[2]) * heightScale; 
-             
-            yGVal = height - yGVal; // 0,0 is top-left 
-             
-            if (first) { 
-                ctx.moveTo(x, yGVal); 
-                first = false; 
-            } 
-            else { 
-                ctx.lineTo(x, yGVal); 
-            } 
-        } 
-         
-        ctx.strokeStyle = "red"; 
-        ctx.lineWidth = 3; 
-        ctx.stroke();  
-    }; 
- 	
- 	plot(function (x) { 
-    	return Math.sin(x) + Math.sin(x * 2); 
-	}, [0, Math.PI * 4, -4, 4]); 
+	var layoutLVPLVV = {
+	  title: "Left Ventricular Pressure vs Left Ventricular Volume",
+	  xaxis: {
+	    title: "Volume (mL)",
+	    titlefont: {
+	      family: "Courier New, monospace",
+	      size: 18,
+	      color: "#7f7f7f"
+	    }
+	  },
+	  yaxis: {
+	    title: "Pressure (mmHg)",
+	    titlefont: {
+	      family: "Courier New, monospace",
+	      size: 18,
+	      color: "#7f7f7f"
+	    }
+	  }
+	};
+
+	var graphOption1 = {layout: layoutLVPLVV, fileopt : "overwrite", filename : "LVP vs LVV"};
+
+	plotly.plot(dataLVPvsLVV, graphOption1, function (err, msg) {
+			if (err) return console.log(err);
+			console.log(msg.url);
+			urlLVPLVV = String(msg.url);
+			open( urlLVPLVV, function (err) {
+  				if ( err ) throw err;    
+			});	
+	});
+
+	var dataQaVsTime = [{x:Time, y:Qa, type: 'line'}];
+	var layoutQaTime = {
+	  title: "Flow Rate vs Time",
+	  xaxis: {
+	    title: "Time (s)",
+	    titlefont: {
+	      family: "Courier New, monospace",
+	      size: 18,
+	      color: "#7f7f7f"
+	    }
+	  },
+	  yaxis: {
+	    title: "Flow Rate (ml/s)",
+	    titlefont: {
+	      family: "Courier New, monospace",
+	      size: 18,
+	      color: "#7f7f7f"
+	    }
+	  }
+	};
+
+	var graphOption2 = {layout: layoutQaTime, fileopt : "overwrite", filename : "Qa vs Time"};
+
+	var urlQaTime;
+
+	plotly.plot(dataQaVsTime, graphOption2, function (err, msg) {
+			if (err) return console.log(err);
+			console.log(msg.url);
+			urlQaTime = String(msg.url);
+
+			open( urlQaTime, function (err) {
+  				if ( err ) throw err;    
+			});	
+	});
+
+	var firstPlotTrace = {
+	    x: Time,
+	    y: LVP,
+	    type: 'scatter',
+	    name: 'Left Ventricular Pressure vs Time'
+	};
+
+	var secondPlotTrace = {
+	    x: Time,
+	    y: LAP,
+	    type: 'scatter',
+	    name: 'Left Atrial Pressure vs Time'
+	};
+
+	var thirdPlotTrace = {
+	    x: Time,
+	    y: AP,
+	    type: 'scatter',
+	    name: 'Atrial Pressure vs Time'
+	};
+
+	var fourthPlotTrace = {
+	    x: Time,
+	    y: AOP,
+	    type: 'scatter',
+	    name: 'Aortic Pressure vs Time'
+	};
+
+	var plotData = [firstPlotTrace, secondPlotTrace, thirdPlotTrace, fourthPlotTrace];
+	var layoutXTime = {
+	  title: "Cardiac Cycle",
+	  xaxis: {
+	    title: "Time (s)",
+	    titlefont: {
+	      family: "Courier New, monospace",
+	      size: 18,
+	      color: "#7f7f7f"
+	    }
+	  },
+	  yaxis: {
+	    title: "Pressure (mmHg)",
+	    titlefont: {
+	      family: "Courier New, monospace",
+	      size: 18,
+	      color: "#7f7f7f"
+	    }
+	  }
+	};
+
+	var graphOption3 = {layout: layoutXTime, fileopt : "overwrite", filename : "X vs Time"};
+
+	plotly.plot(plotData, graphOption3, function (err, msg) {
+		if (err) return console.log(err);
+		console.log(msg.url);
+		urlXTime = String(msg.url);
+
+		open( urlXTime, function (err) {
+			if ( err ) throw err;    
+		});
+	});
 })
 

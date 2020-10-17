@@ -1,0 +1,66 @@
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+<script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+<div class="textfields" float=left>
+	<form method="POST", action="/generate_graph">
+		
+	  <div class="mdl-textfield mdl-js-textfield">
+	    <input class="mdl-textfield__input" type="text" name="heartrate" value="60" pattern="-?[0-9]*(\.[0-9]+)?" id="sample2">
+	    <label class="mdl-textfield__label" for="sample2">Heart Rate</label>
+	    <span class="mdl-textfield__error">Input is not a number!</span>
+	  </div>
+	
+	  <div class="mdl-textfield mdl-js-textfield">
+	    <input class="mdl-textfield__input" type="text" name="leftVentrPressure" value="8.2" pattern="-?[0-9]*(\.[0-9]+)?" id="sample2">
+	    <label class="mdl-textfield__label" for="sample2">Initial Left Ventricular Pressure</label>
+	    <span class="mdl-textfield__error">Input is not a number!</span>
+	  </div>
+	
+
+	
+	  <div class="mdl-textfield mdl-js-textfield">
+	    <input class="mdl-textfield__input" type="text" name="leftAtrPressure" value="7.6" pattern="-?[0-9]*(\.[0-9]+)?" id="sample2">
+	    <label class="mdl-textfield__label" for="sample2">Initial Left Atrial Pressure</label>
+	    <span class="mdl-textfield__error">Input is not a number!</span>
+	  </div>
+	
+
+	
+	  <div class="mdl-textfield mdl-js-textfield">
+	    <input class="mdl-textfield__input" type="text" name="aorticPressure" value="80" pattern="-?[0-9]*(\.[0-9]+)?" id="sample2">
+	    <label class="mdl-textfield__label" for="sample2">Initial Aortic Pressure<label>
+	    <span class="mdl-textfield__error">Input is not a number!</span>
+	  </div>
+	
+
+	  <div class="mdl-textfield mdl-js-textfield">
+	    <input class="mdl-textfield__input" type="text" name="atrialPressure" value="67" pattern="-?[0-9]*(\.[0-9]+)?" id="sample2">
+	    <label class="mdl-textfield__label" for="sample2">Initial Atrial Pressure</label>
+	    <span class="mdl-textfield__error">Input is not a number!</span>
+	  </div>
+
+
+	  <div class="mdl-textfield mdl-js-textfield">
+	    <input class="mdl-textfield__input" type="text" name="systemicVascularResistance" value="1" pattern="-?[0-9]*(\.[0-9]+)?" id="sample2">
+	    <label class="mdl-textfield__label" for="sample2">Systemic Vascular Resistance</label>
+	    <span class="mdl-textfield__error">Input is not a number!</span>
+	  </div>
+
+
+
+	  <div class="mdl-textfield mdl-js-textfield">
+	    <input class="mdl-textfield__input" type="text" name="mitralValveResistance" value="0.0050" pattern="-?[0-9]*(\.[0-9]+)?" id="sample2">
+	    <label class="mdl-textfield__label" for="sample2">Mitral Valve Resistance</label>
+	    <span class="mdl-textfield__error">Input is not a number!</span>
+	  </div>
+	
+
+		<button type="generate_graph" formmethod="post" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect" id="generate_graphs">
+		  Generate Graphs
+		</button>
+	</form>
+
+	<canvas class="myCanvas">
+		
+	</canvas>
+</div>

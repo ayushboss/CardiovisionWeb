@@ -10,23 +10,17 @@
 	    <span class="mdl-textfield__error">Input is not a number!</span>
 	  </div>
 	
-
-	
-	  <div class="mdl-textfield mdl-js-textfield">
-	    <input class="mdl-textfield__input" type="text" name="time" pattern="-?[0-9]*(\.[0-9]+)?" id="sample2">
-	    <label class="mdl-textfield__label" for="sample2">Time to run (s)</label>
-	    <span class="mdl-textfield__error">Input is not a number!</span>
-	  </div>
-	
-
-	
 	  <div class="mdl-textfield mdl-js-textfield">
 	    <input class="mdl-textfield__input" type="text" name="leftVentrPressure" pattern="-?[0-9]*(\.[0-9]+)?" id="sample2">
 	    <label class="mdl-textfield__label" for="sample2">Initial Left Ventricular Pressure</label>
 	    <span class="mdl-textfield__error">Input is not a number!</span>
 	  </div>
-	
 
+  	  <div class="mdl-textfield mdl-js-textfield">
+	    <input class="mdl-textfield__input" type="text" name="aorticResistance" pattern="-?[0-9]*(\.[0-9]+)?" id="sample2">
+	    <label class="mdl-textfield__label" for="sample2">Aortic Resistance</label>
+	    <span class="mdl-textfield__error">Input is not a number!</span>
+	  </div>
 	
 	  <div class="mdl-textfield mdl-js-textfield">
 	    <input class="mdl-textfield__input" type="text" name="leftAtrPressure" pattern="-?[0-9]*(\.[0-9]+)?" id="sample2">
@@ -34,21 +28,17 @@
 	    <span class="mdl-textfield__error">Input is not a number!</span>
 	  </div>
 	
-
-	
 	  <div class="mdl-textfield mdl-js-textfield">
 	    <input class="mdl-textfield__input" type="text" name="aorticPressure" pattern="-?[0-9]*(\.[0-9]+)?" id="sample2">
 	    <label class="mdl-textfield__label" for="sample2">Initial Aortic Pressure<label>
 	    <span class="mdl-textfield__error">Input is not a number!</span>
 	  </div>
 	
-
 	  <div class="mdl-textfield mdl-js-textfield">
 	    <input class="mdl-textfield__input" type="text" name="atrialPressure" pattern="-?[0-9]*(\.[0-9]+)?" id="sample2">
 	    <label class="mdl-textfield__label" for="sample2">Initial Atrial Pressure</label>
 	    <span class="mdl-textfield__error">Input is not a number!</span>
 	  </div>
-
 
 	  <div class="mdl-textfield mdl-js-textfield">
 	    <input class="mdl-textfield__input" type="text" name="systemicVascularResistance" pattern="-?[0-9]*(\.[0-9]+)?" id="sample2">
@@ -56,17 +46,18 @@
 	    <span class="mdl-textfield__error">Input is not a number!</span>
 	  </div>
 
-
-
 	  <div class="mdl-textfield mdl-js-textfield">
 	    <input class="mdl-textfield__input" type="text" name="mitralValveResistance" pattern="-?[0-9]*(\.[0-9]+)?" id="sample2">
 	    <label class="mdl-textfield__label" for="sample2">Mitral Valve Resistance</label>
 	    <span class="mdl-textfield__error">Input is not a number!</span>
 	  </div>
-	
 
 		<button type="generate_graph" formmethod="post" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect" id="generate_graphs">
 		  Generate Graphs
 		</button>
 	</form>
+
+	<canvas class="myCanvas">
+		
+	</canvas>
 </div>
