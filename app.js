@@ -6,9 +6,11 @@ var math = require("mathjs");
 var open = require("open");
 var plotly = require('plotly')("ayushboss", "dnQPvFSjFVfOcQgZSm2u")
 
+var port = process.env.PORT || 8080;
+
 app.use(express.static("/public"));
 app.use(bodyParser.urlencoded({ extended: true }))
-app.listen(8080, () => {
+app.listen(port, () => {
 	console.log("bruh: " + __dirname);
 	console.log("Listening on port 8080.");
 });
