@@ -4,12 +4,21 @@ var bodyParser = require("body-parser");
 var plotlib = require("nodeplotlib");
 var math = require("mathjs");
 var open = require("open");
+var puppeteer = require('puppeteer');
 var plotly = require('plotly')("ayushboss", "dnQPvFSjFVfOcQgZSm2u")
+var handlebars = require('express-handlebars');
+let ejs = require('ejs');
 
 var port = process.env.PORT || 8080;
 
 app.use(express.static("/public"));
 app.use(bodyParser.urlencoded({ extended: true }))
+//Sets our app to use the handlebars engine
+//Sets handlebars configurations (we will go through them later on)
+app.engine('handlebars', handlebars({
+	layoutsDir: __dirname+'/public',
+}));
+
 app.listen(port, () => {
 	console.log("bruh: " + __dirname);
 	console.log("Listening on port 8080.");
@@ -197,11 +206,13 @@ app.post('/generate_graph', (req,res) => {
 	E[i] = (Emax-Emin)*En + Emin;
 	LVV[i] = LVP[i]/E[i] + V0;
 
-	res.redirect('/waiting');
+	// res.redirect('/waiting');
 
 	var dataLVPvsLVV = [{x:LVV, y:LVP, type: 'line'}];
 
 	var urlLVPLVV;
+
+	var arrayOfURLs = [];
 
 	var layoutLVPLVV = {
 	  title: "Left Ventricular Pressure vs Left Ventricular Volume",
@@ -224,7 +235,7 @@ app.post('/generate_graph', (req,res) => {
 	};
 
 	var graphOption1 = {layout: layoutLVPLVV, fileopt : "overwrite", filename : "LVP vs LVV"};
-
+	console.log("outer");
 	plotly.plot(dataLVPvsLVV, graphOption1, function (err, msg) {
 			if (err) return console.log(err);
 			console.log(msg.url);
@@ -232,102 +243,120 @@ app.post('/generate_graph', (req,res) => {
 			open( urlLVPLVV, function (err) {
   				if ( err ) throw err;    
 			});	
+			console.log("calculated first");
+
+			var dataQaVsTime = [{x:Time, y:Qa, type: 'line'}];
+			var layoutQaTime = {
+			  title: "Flow Rate vs Time",
+			  xaxis: {
+			    title: "Time (s)",
+			    titlefont: {
+			      family: "Courier New, monospace",
+			      size: 18,
+			      color: "#7f7f7f"
+			    }
+			  },
+			  yaxis: {
+			    title: "Flow Rate (ml/s)",
+			    titlefont: {
+			      family: "Courier New, monospace",
+			      size: 18,
+			      color: "#7f7f7f"
+			    }
+			  }
+			};
+
+			var graphOption2 = {layout: layoutQaTime, fileopt : "overwrite", filename : "Qa vs Time"};
+
+			var urlQaTime;
+
+			plotly.plot(dataQaVsTime, graphOption2, function (err, msg) {
+					console.log("mid");
+					if (err) return console.log(err);
+					console.log(msg.url);
+					urlQaTime = String(msg.url);
+
+					open( urlQaTime, function (err) {
+		  				if ( err ) throw err;    
+					});	
+					arrayOfURLs.push([urlQaTime, 1]);
+					console.log("calculated second");
+
+					var firstPlotTrace = {
+				    x: Time,
+				    y: LVP,
+				    type: 'scatter',
+				    name: 'Left Ventricular Pressure vs Time'
+					};
+
+					var secondPlotTrace = {
+					    x: Time,
+					    y: LAP,
+					    type: 'scatter',
+					    name: 'Left Atrial Pressure vs Time'
+					};
+
+					var thirdPlotTrace = {
+					    x: Time,
+					    y: AP,
+					    type: 'scatter',
+					    name: 'Atrial Pressure vs Time'
+					};
+
+					var fourthPlotTrace = {
+					    x: Time,
+					    y: AOP,
+					    type: 'scatter',
+					    name: 'Aortic Pressure vs Time'
+					};
+
+					var plotData = [firstPlotTrace, secondPlotTrace, thirdPlotTrace, fourthPlotTrace];
+					var layoutXTime = {
+					  title: "Cardiac Cycle",
+					  xaxis: {
+					    title: "Time (s)",
+					    titlefont: {
+					      family: "Courier New, monospace",
+					      size: 18,
+					      color: "#7f7f7f"
+					    }
+					  },
+					  yaxis: {
+					    title: "Pressure (mmHg)",
+					    titlefont: {
+					      family: "Courier New, monospace",
+					      size: 18,
+					      color: "#7f7f7f"
+					    }
+					  }
+					};
+
+					var graphOption3 = {layout: layoutXTime, fileopt : "overwrite", filename : "X vs Time"};
+
+					plotly.plot(plotData, graphOption3, function (err, msg) {
+						if (err) return console.log(err);
+						console.log(msg.url);
+						urlXTime = String(msg.url);
+
+						open( urlXTime, function (err) {
+							if ( err ) throw err;    
+						});
+						console.log("calculated third, sending to web");
+
+						var dataToSendObj = {'lvpLVV': urlLVPLVV, 'QaT': urlQaTime, 'cardiac':urlXTime};
+    					var urls = [urlLVPLVV, urlQaTime, urlXTime];
+    					let html = ejs.render('<%= urls.join(", "); %>', {urls: urls});
+    					console.log(html);
+						res.set('Content-Type', 'text/html');
+						var test="<head> <title>Generated Graphs!</title> </head> <body> <h1 align=\"center\">Generating graphs, please wait...</h1><p>Link to Left Ventricular Pressure vs Left Ventricular Volume graph: <a href=\"" + urlLVPLVV + "\">"+urlLVPLVV+"</a></p> <p>Flow Rate vs Time graph: <a href=\"" + urlQaTime + "\">"+urlQaTime+"</a></p> <p>Link to Cardiac Cycle graph: <a href=\"" + urlXTime + "\">"+urlXTime+"</a> </p> <p align=\"center\">Return <a href=\"home\">home</a></p> </body> </head>"
+						res.send(test);
+					});
+
+				});
+
 	});
 
-	var dataQaVsTime = [{x:Time, y:Qa, type: 'line'}];
-	var layoutQaTime = {
-	  title: "Flow Rate vs Time",
-	  xaxis: {
-	    title: "Time (s)",
-	    titlefont: {
-	      family: "Courier New, monospace",
-	      size: 18,
-	      color: "#7f7f7f"
-	    }
-	  },
-	  yaxis: {
-	    title: "Flow Rate (ml/s)",
-	    titlefont: {
-	      family: "Courier New, monospace",
-	      size: 18,
-	      color: "#7f7f7f"
-	    }
-	  }
-	};
 
-	var graphOption2 = {layout: layoutQaTime, fileopt : "overwrite", filename : "Qa vs Time"};
 
-	var urlQaTime;
-
-	plotly.plot(dataQaVsTime, graphOption2, function (err, msg) {
-			if (err) return console.log(err);
-			console.log(msg.url);
-			urlQaTime = String(msg.url);
-
-			open( urlQaTime, function (err) {
-  				if ( err ) throw err;    
-			});	
-	});
-
-	var firstPlotTrace = {
-	    x: Time,
-	    y: LVP,
-	    type: 'scatter',
-	    name: 'Left Ventricular Pressure vs Time'
-	};
-
-	var secondPlotTrace = {
-	    x: Time,
-	    y: LAP,
-	    type: 'scatter',
-	    name: 'Left Atrial Pressure vs Time'
-	};
-
-	var thirdPlotTrace = {
-	    x: Time,
-	    y: AP,
-	    type: 'scatter',
-	    name: 'Atrial Pressure vs Time'
-	};
-
-	var fourthPlotTrace = {
-	    x: Time,
-	    y: AOP,
-	    type: 'scatter',
-	    name: 'Aortic Pressure vs Time'
-	};
-
-	var plotData = [firstPlotTrace, secondPlotTrace, thirdPlotTrace, fourthPlotTrace];
-	var layoutXTime = {
-	  title: "Cardiac Cycle",
-	  xaxis: {
-	    title: "Time (s)",
-	    titlefont: {
-	      family: "Courier New, monospace",
-	      size: 18,
-	      color: "#7f7f7f"
-	    }
-	  },
-	  yaxis: {
-	    title: "Pressure (mmHg)",
-	    titlefont: {
-	      family: "Courier New, monospace",
-	      size: 18,
-	      color: "#7f7f7f"
-	    }
-	  }
-	};
-
-	var graphOption3 = {layout: layoutXTime, fileopt : "overwrite", filename : "X vs Time"};
-
-	plotly.plot(plotData, graphOption3, function (err, msg) {
-		if (err) return console.log(err);
-		console.log(msg.url);
-		urlXTime = String(msg.url);
-
-		open( urlXTime, function (err) {
-			if ( err ) throw err;    
-		});
-	});
 })
 
