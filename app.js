@@ -5,7 +5,7 @@ var plotlib = require("nodeplotlib");
 var math = require("mathjs");
 var open = require("open");
 var puppeteer = require('puppeteer');
-var plotly = require('plotly')("ayushboss", "dnQPvFSjFVfOcQgZSm2u")
+var plotly = require('plotly')("Cardiovision", "mSWBlpNizchvRK9q9LDt");
 var handlebars = require('express-handlebars');
 let ejs = require('ejs');
 
@@ -348,7 +348,7 @@ app.post('/generate_graph', (req,res) => {
     					let html = ejs.render('<%= urls.join(", "); %>', {urls: urls});
     					console.log(html);
 						res.set('Content-Type', 'text/html');
-						var test="<head> <title>Generated Graphs!</title> </head> <body> <h1 align=\"center\">Generating graphs, please wait...</h1><p>Link to Left Ventricular Pressure vs Left Ventricular Volume graph: <a href=\"" + urlLVPLVV + "\">"+urlLVPLVV+"</a></p> <p>Flow Rate vs Time graph: <a href=\"" + urlQaTime + "\">"+urlQaTime+"</a></p> <p>Link to Cardiac Cycle graph: <a href=\"" + urlXTime + "\">"+urlXTime+"</a> </p> <p align=\"center\">Return <a href=\"home\">home</a></p> </body> </head>"
+						var test="<head> <title>Generated Graphs!</title> </head> <body> <h1 align=\"center\">Generated graphs!</h1><p>Link to Left Ventricular Pressure vs Left Ventricular Volume graph: <a href=\"" + urlLVPLVV + "\">"+urlLVPLVV+"</a></p> <p>Flow Rate vs Time graph: <a href=\"" + urlQaTime + "\">"+urlQaTime+"</a></p> <p>Link to Cardiac Cycle graph: <a href=\"" + urlXTime + "\">"+urlXTime+"</a> </p> <p align=\"center\">Return <a href=\"home\">home</a></p> </body> </head>"
 						res.send(test);
 					});
 
