@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CardioVision</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+        }
+
+        .hero-bg {
+            background-color: #91f6ff;
+            text-align: center;
+            padding: 4em 6em 6em 6em;
+        }
+
+        header {
+            text-align: left;
+            padding: 1em 0em;
+        }
+
+        .hero-bg a {
+            color: #f2247d;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .hero-bg p {
+            margin: 0 1em 3em;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 1em;
+            display: block;
+        }
+
+        .bottom-email {
+            margin: 3em;
+            padding: 2em;
+            background-color: white;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            padding: 0em 1em 1em 1em;
+        }
+
+        input[type=text] {
+            border: 1px solid;
+            margin-bottom: 1.5em;
+            width: 100%;
+            border-radius: 0.5em;
+        }
+
+        .normal {
+            background-color: white;
+            padding-top: 1em;
+            padding-bottom: 3em;
+            border-radius: 1em;
+            margin: 2em;
+        }
+
+        .pathological {
+            background-color: white;
+            margin: 2em;
+            padding-top: 1em;
+            padding-left: 1em;
+            padding-right: 1em;
+            padding-bottom: 3em;
+            border-radius: 1em;
+        }
+
+        .custom {
+            background-color: white;
+            margin: 2em;
+            padding-top: 1em;
+            padding-bottom: 3em;
+            border-radius: 1em;
+        }
+
+        button {
+            background-color: #f2247d;
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
+            padding: 0.7em;
+            border-radius: 0.5em;
+            margin: 1em;
+        }
+
+        button:hover {
+            background-color: aqua;
+        }
+
+        .bottom-email {
+            display: block;
+            margin-bottom: 1.5em;
+            border-radius: 1em;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    
+    <div class="hero-bg">
+        <header>
+            <a href="#">CardioVision</a>
+        </header>
+
+        <section class="top">
+
+            <h1>CardioVision</h1>
+            <p>CardioVision allows you to visualize cardiovascular parameters and learn about various cardiovascular dysfunctions. Simply input the values you desire and get the custom mathematical simulations created!</p>
+            <p>Click <a href="/info">here</a> for a detailed guide on how to use CardioVision!</p>
+            <div class="normal">
+                <h2>Normal Simulations</h2>
+                <p>Browse through our database of normal cardivascular simulations!</p>
+                <a href="/normal">
+                    <button>Default Normal</button>
+                </a>
+            </div>
+
+            <div class="pathological">
+                <h2>Pathological Simulations</h3>
+                    <p>Browse through our database of common cardiovascular pathologies and see how the cardiovascular graphs are affected.</p>
+                    <a href="/mitral_stenosis">
+                        <button>Mitral Stenosis</button>
+                    </a>
+                    <a href="/aortic_stenosis">
+                        <button>Aortic Stenosis</button>
+                    </a>
+                    <a href="hypertension">
+                        <button>Hypertension</button>
+                    </a>
+                    <a href="hypotension">
+                        <button>Hypotension</button>
+                    </a>
+            </div>
+
+            <div class="custom">
+                <h2>Custom Simulation</h2>
+                <p>Interested in creating your custom cardiovascular simulation?</p>
+                <a href="custom">
+                    <button>Custom Simulation</button>
+                </a>
+            </div>
+
+
+        </section>
+
+
+        <section class = "bottom-email">
+            <div class="email-input">
+                <p>Want to receive email updates?</p>
+                <form action="">
+                    <div class="form-left">
+                        <label for="email">Enter your email:</label>
+                        <input type="text" name="email-input" id="email" style="width:400px">
+                        <p>Example: janedoe@gmail.com</p>
+                        <input type="button" value="Submit">
+                    </div>
+                    
+                </form>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mitral Stenosis</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+      body {
+          font-family: 'Montserrat', sans-serif;
+          background-color: #91f6ff;
+          margin: 0;
+      }
+
+      header {
+          margin: 3em;
+      }
+
+      .instructions {
+          text-align: center;
+          margin: 4em;
+      }
+
+      .instructions p{
+          background-color: white;
+          margin-top: 2em;
+          margin-left: 10em;
+          margin-right: 10em;
+          padding: 2em;
+          border-radius: 1em;
+      }
+
+      .summarize-graph {
+          background-color: white;
+          margin-top: 2em;
+          margin-left: 10em;
+          margin-right: 10em;
+          margin-bottom: 5em;
+          padding: 2em;
+          border-radius: 1em;
+      }
+
+      form {
+          text-align: center;
+          margin: 3em;
+      }
+    </style>
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <a href="index">CardioVision</a>
+    </header>
+
+    <div class=instructions>
+        <h1>Mitral Stenosis</h1>
+        <div class=description>
+          <p>
+            Mitral stenosis is the narrowing of the mitral valve, meaning a decreased mitral valve diameter. The exact cause of mitral stenosis is unknown.
+            Mitral stenosis entails increased mitral resistance. In critical mitral stenosis, the valve area is approximately halved, making the resistance 
+            approximately quadrupled. So, to model the mitral stenosis curve, we use a resistance of 0.02 instead of 0.005 mmHg*s/mL.
+          </p>
+          <p>
+            Common symptoms of mitral stenosis include: fatigue, shortness of breath, swollen ankles or feet, heart paliptations, etc.
+            To learn more about mitral stenosis, visit <a href="https://www.mayoclinic.org/diseases-conditions/mitral-valve-stenosis/symptoms-causes/syc-20353159">here</a>.
+          </p>
+        </div>
+        <p>
+            Want to learn more about what each value means? Confused on how to use our graphs? Visit our <a href="info">Info/FAQ Page</a>:
+        </p>
+    </div>
+
+    <div class=input-para>
+        <form method="POST", action="/generate_graph">
+		
+          <div class="mdl-textfield mdl-js-textfield">
+            <input class="mdl-textfield__input" type="text" name="heartrate" value="60" pattern="-?[0-9]*(\.[0-9]+)?" id="sample2">
+            <label class="mdl-textfield__label" for="sample2">Heart Rate</label>
+            <span class="mdl-textfield__error">Input is not a number!</span>
+          </div>
+        
+          <div class="mdl-textfield mdl-js-textfield">
+            <input class="mdl-textfield__input" type="text" name="leftVentrPressure" value="8.2" pattern="-?[0-9]*(\.[0-9]+)?" id="sample2">
+            <label class="mdl-textfield__label" for="sample2">Initial Left Ventricular Pressure</label>
+            <span class="mdl-textfield__error">Input is not a number!</span>
+          </div>
+        
+            <div class="mdl-textfield mdl-js-textfield">
+            <input class="mdl-textfield__input" type="text" name="aorticResistance" value="0.0010" pattern="-?[0-9]*(\.[0-9]+)?" id="sample2">
+            <label class="mdl-textfield__label" for="sample2">Aortic Resistance</label>
+            <span class="mdl-textfield__error">Input is not a number!</span>
+          </div>
+      
+        
+          <div class="mdl-textfield mdl-js-textfield">
+            <input class="mdl-textfield__input" type="text" name="leftAtrPressure" value="7.6" pattern="-?[0-9]*(\.[0-9]+)?" id="sample2">
+            <label class="mdl-textfield__label" for="sample2">Initial Left Atrial Pressure</label>
+            <span class="mdl-textfield__error">Input is not a number!</span>
+          </div>
+        
+      
+        
+          <div class="mdl-textfield mdl-js-textfield">
+            <input class="mdl-textfield__input" type="text" name="aorticPressure" value="80" pattern="-?[0-9]*(\.[0-9]+)?" id="sample2">
+            <label class="mdl-textfield__label" for="sample2">Initial Aortic Pressure<label>
+            <span class="mdl-textfield__error">Input is not a number!</span>
+          </div>
+        
+      
+          <div class="mdl-textfield mdl-js-textfield">
+            <input class="mdl-textfield__input" type="text" name="atrialPressure" value="67" pattern="-?[0-9]*(\.[0-9]+)?" id="sample2">
+            <label class="mdl-textfield__label" for="sample2">Initial Atrial Pressure</label>
+            <span class="mdl-textfield__error">Input is not a number!</span>
+          </div>
+      
+      
+          <div class="mdl-textfield mdl-js-textfield">
+            <input class="mdl-textfield__input" type="text" name="systemicVascularResistance" value="1" pattern="-?[0-9]*(\.[0-9]+)?" id="sample2">
+            <label class="mdl-textfield__label" for="sample2">Systemic Vascular Resistance</label>
+            <span class="mdl-textfield__error">Input is not a number!</span>
+          </div>
+      
+      
+      
+          <div class="mdl-textfield mdl-js-textfield">
+            <input class="mdl-textfield__input" type="text" name="mitralValveResistance" value="0.0020" pattern="-?[0-9]*(\.[0-9]+)?" id="sample2">
+            <label class="mdl-textfield__label" for="sample2">Mitral Valve Resistance</label>
+            <span class="mdl-textfield__error">Input is not a number!</span>
+          </div>
+    
+            <div class=generate_graphs>
+              <button type="generate_graph" formmethod="post" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect" id="generate_graphs">
+                Generate Graphs
+              </button>
+            </div>
+          </form>
+
+        <div class=summarize-graph>
+          <h5>Observations:</h5>
+          <ul>
+            <li>Increased left atrial pressure, prolonged will lead to left atrial hypertrophy</li>
+            <li>Over several heartbeats, there is a gradual increase in atrial pressure (due to blood accumulation) and a gradual decrease in the rest
+              of the values, as it is less blood is pumped into the ventricles and later into the arteries and aorta
+            </li>
+            <li>Rapid decline in blood flow rate, then a gradual increase as the heart adapts to a narrower mitral valve</li>
+          </ul>
+        </div>
+    </div>
+</body>
+</html>

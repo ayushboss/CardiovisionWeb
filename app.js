@@ -9,12 +9,13 @@ var plotly = require('plotly')("ayushboss", "dnQPvFSjFVfOcQgZSm2u")
 app.use(express.static("/public"));
 app.use(bodyParser.urlencoded({ extended: true }))
 app.listen(8080, () => {
+	console.log("bruh: " + __dirname);
 	console.log("Listening on port 8080.");
 });
 
 app.get('/', (req,res) => {
 	console.log("test");
-	res.sendFile(__dirname+"/public/home.html");
+	res.sendFile(__dirname+"/public/index.html");
 });
 
 app.get('/custom', (req,res)=> {
@@ -31,24 +32,16 @@ app.get('/home', (req,res) => {
 	res.redirect("/");
 });
 
-app.get('/example_preset', (req,res)=> {
-	console.log("custom link");
-	res.sendFile(__dirname+"/public/example_preset.html");
-})
+app.get('/index', (req,res) => {
+	res.redirect("/");
+});
 
-app.get('/adult_female', (req,res)=> {
-	console.log("custom link");
-	res.sendFile(__dirname+"/public/adult_female.html");
-})
+app.get('/info', (req,res) => {
+	res.sendFile(__dirname+"/public/info.html");
+});
 
-app.get('/adult_male', (req,res)=> {
-	console.log("custom link");
-	res.sendFile(__dirname+"/public/adult_male.html");
-})
-
-app.get('/child', (req,res)=> {
-	console.log("custom link");
-	res.sendFile(__dirname+"/public/child.html");
+app.get('/normal', (req,res)=> {
+	res.sendFile(__dirname+"/public/normal.html");
 })
 
 app.get('/hypertension', (req,res)=> {
@@ -63,12 +56,12 @@ app.get('/hypotension', (req,res)=> {
 
 app.get('/mitral_stenosis', (req,res)=> {
 	console.log("custom link");
-	res.sendFile(__dirname+"/public/mitral_stenosis.html");
+	res.sendFile(__dirname+"/public/mitral-stenosis.html");
 })
 
 app.get('/aortic_stenosis', (req,res)=> {
 	console.log("custom link");
-	res.sendFile(__dirname+"/public/aortic_stenosis.html");
+	res.sendFile(__dirname+"/public/aortic-stenosis.html");
 })
 
 app.post('/generate_graph', (req,res) => {

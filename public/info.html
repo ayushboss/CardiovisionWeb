@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CardioVision Guide</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
+        body {
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #91f6ff;
+        }
+
+        header {
+            padding: 1em 0em;
+            margin: 2em;
+        }
+
+        h1 {
+            margin-top: 1em;
+            margin-bottom: 2em;
+            text-align: center;
+        }
+
+        .question1 {
+            margin-top: 2em;
+            margin-left: 6em;
+            margin-right: 6em;
+            margin-bottom: 2em;
+            background-color: white;
+            padding: 2em 3em 2em 3em;
+            border-radius: 1em;
+        }
+
+        .question2 {
+            margin-top: 2em;
+            margin-left: 6em;
+            margin-right: 6em;
+            margin-bottom: 2em;
+            background-color: white;
+            padding: 2em 3em 2em 3em;
+            border-radius: 1em;
+        }
+
+        .question3 {
+            margin-top: 2em;
+            margin-left: 6em;
+            margin-right: 6em;
+            margin-bottom: 2em;
+            background-color: white;
+            padding: 2em 3em 2em 3em;
+            border-radius: 1em;
+        }
+
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 3em;
+            margin-bottom: 3em;
+            width: 60%;
+          }
+
+          a {
+              color: #f2247d
+          }
+        </style>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+
+    <header>
+        <a href="/home">CardioVision</a>
+    </header>
+</head>
+
+<body>
+    <h1>CardioVision Guide</h1>
+
+    <div class=question1>
+        <h3>What is CardioVision?</h3>
+        <p>
+            CardioVision is a dynamic web application that uses a 6th degree vector polynomial function
+            to generate a simulation of a single cardiac cycle. The difference between CardioVision 
+            and other cardiovascular graphing technologies is its ability to take in custom cardiac 
+            parameters specific to an individual patient and use differential equations to produce 
+            graphs of their cardiac cycle through instantaneous changes.
+        </p>
+    </div>
+
+    <div class=question2>
+        <h3>What are the uses of CardioVision?</h3>
+        <p>
+            CardioVision is the first online software to generate custom, user-generated cardiac cycle
+            graphs. CardioVision is great for use in the medical classroom, as it allows medical students
+            to visulize the way changes in cardiac parameters in turn cause changes in the cardiac cycle
+            graphs in aspects such as shape, pressures, volumes, etc. Beyond medical education,
+            CardioVision can be used in the medical setting for health practitioners to communicate with patients
+            regarding the impacts of their cardiovascular treatment with a visualization tool, facilitating
+            physician-patient communication.
+        </p>
+    </div>
+
+    <div class=question3>
+        <h3>What do each of the parameters mean?</h3>
+        <ul>
+            <li><strong>Heart Rate (bpm):</strong> The number of times the heart beats in 1 minute.</li>
+            <li><strong>Left Ventricular Pressure (mmHg):</strong> Also known as the LVP, this is a measure of the blood pressure against
+                the left ventricle. The initial LVP is the LVP at the beginning of each cardiac cycle.
+            </li>
+            <li><strong>Left Atrial Pressure (mmHg):</strong> Also known as the LAP, it is a measure of the blood pressure against the left
+                atrium. The initial LAP is the LAP at the beginning of each cardiac cycle.
+            </li>
+            <li><strong>Aortic Pressure (mmHg):</strong> Also known as the AOP, this measures the blood pressure 
+                in the aorta, the artery that receives blood from the left ventricle.
+            </li>
+            <li><strong>Arterial Pressure (mmHg):</strong> Also known as the AP, this measures the blood pressure in peripheral arteries.
+            </li>
+            <li><strong>Systemic Vascular Resistance (mmHg*s/mL): </strong>Also known as the SVR, this refers to the resistance to blood flow offered by all of the 
+            systemic vasculature, excluding the pulmonary vasculature. It can be calculated as the mean arterial pressure
+            divided by the cardiac output.</li>
+            <li><strong>Mitral Valve Resistance (mmHg*s/mL): </strong> The mitral valve is the valve between the left atrium and left ventricle. Its diameter 
+            greatly affects the blood resistance and in turn, the ability of the left atrium to pump blood into the 
+            left ventricle.</li>
+            <li><strong>Aortic Valve Resistance (mmHg*s/mL): </strong> The aortic valve is the valve between the left ventricle and the aorta respsonble
+            for allowing the left ventricle to pump blood to the rest of the body. Its diameter greatly affects the resistance of blood flowing through it, 
+            and in turn, the ability of the left ventricle to pump blood throughout the body.</li>
+        </ul>
+
+        <p>To see a list of normal values and the corresponding normal graphs, please the <a href="normal">Normal Simulations</a> page.</p>
+    </div>
+
+    <img src="https://adoptionairfare.com/wp-content/uploads/Heart-Picture-400x315.png" alt="Diagram of the heart" class="center">
+
+</body>
+</html>
